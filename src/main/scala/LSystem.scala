@@ -8,6 +8,10 @@ object LSystem {
     implicit def CharToString(c:Char) = c.toString
     implicit def StringToAxiom(str:String) = Axiom(str)
     implicit def Tuple2ToRule(t:(Char,String)) = Rule(t._1,t._2)
+
+    implicit class CharConversion(val self:Char) {
+      def angle(angle:Double) = Angle(self,angle)
+    }
   }
   import Conversions._
 
@@ -19,8 +23,17 @@ object LSystem {
         case None => c.toString
       }
     }
+    def drawOption : Option[DrawOption] = this match {
+      case x : DrawOption => Some(x)
+      case _ => None
+    }
   }
   case class Axiom(src:String)
   case class Rule(src:Char,dst:String)
 
+  trait DrawOption {
+    val params : List[DrawParameter]
+  }
+  abstract class DrawParameter
+  case class Angle(src:Char,deg:Double) extends DrawParameter
 }
