@@ -48,7 +48,7 @@ object OpenCVWrapper {
     def fuchsia = Color(0xff,0,0xff)
   }
 
-  trait DrawApplication {
+  trait Drawing {
     val width:Int
     val height:Int
     val title:String
@@ -61,6 +61,10 @@ object OpenCVWrapper {
     def createMat = new Mat(height,width,CvType.CV_8UC3)
     def draw(f: => Unit)(implicit mat:Mat) : Unit = {
       clear
+      f
+      win.showImage(mat)
+    }
+    def drawNoClear(f: => Unit)(implicit mat:Mat) : Unit = {
       f
       win.showImage(mat)
     }

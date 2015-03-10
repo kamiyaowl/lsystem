@@ -10,6 +10,9 @@ object LSystem {
     implicit def Tuple2ToRule(t:(Char,String)) = Rule(t._1,t._2)
 
     implicit class CharConversion(val self:Char) {
+      def push = Push(self)
+      def pop = Pop(self)
+      def drawForward = DrawForward(self)
       def angle(angle:Double) = Angle(self,angle)
     }
   }
@@ -23,17 +26,22 @@ object LSystem {
         case None => c.toString
       }
     }
-    def drawOption : Option[DrawOption] = this match {
-      case x : DrawOption => Some(x)
+    def drawParam : Option[DrawParameter] = this match {
+      case x : DrawParameter => Some(x)
       case _ => None
     }
   }
   case class Axiom(src:String)
-  case class Rule(src:Char,dst:String)
+  case class Rule(src:Char,dst:String)//TODO: Stochastic ,Context sensitive, Parametric
 
-  trait DrawOption {
-    val params : List[DrawParameter]
+  trait DrawParameter {
+    val options : List[DrawOption]
   }
-  abstract class DrawParameter
-  case class Angle(src:Char,deg:Double) extends DrawParameter
+  abstract class DrawOption{
+    val src:Char
+  }
+  case class Push(src:Char) extends DrawOption
+  case class Pop(src:Char) extends DrawOption
+  case class DrawForward(src:Char) extends DrawOption
+  case class Angle(src:Char,deg:Double) extends DrawOption
 }

@@ -7,54 +7,52 @@ package kamiya
 
 import kamiya.LSystem._
 import kamiya.LSystem.Conversions._
+import kamiya.LSystemDrawer.DrawStatus
 import kamiya.util.OpenCVWrapper._
 import kamiya.util.OpenCVWrapper.Color._
 import org.opencv.core.{CvType, Mat}
 
-object Main extends DrawApplication {
+object Main extends Drawing {
   def main(args: Array[String]): Unit = {
     //val g = Grammar(Axiom("A"),List(Rule('A',"AB"),Rule('B',"A")))
     def test(g:Grammar) = {
       println(g)
-      g.drawOption match {
-        case Some(option) => println(option.params)
+      g.drawParam match {
+        case Some(option) => println(option.options)
         case None => println("DrawOption is nothing.")
       }
       g.generate.take(5).foreach(println)
+      LSystemDrawer.drawWithText(g,g.generate.take(5).reverse.head,DrawStatus(Point.zero,0,10))
     }
     val algae = Grammar("A",List('A' -> "AB", 'B' -> "A"))
-    test(algae)
+    //test(algae)
 
     val pythagorasThree = Grammar("0",List('1' -> "11", '0' -> "1[0]0"))
-    test(pythagorasThree)
+    //test(pythagorasThree)
 
     val cantorDust = Grammar("A",List('A' -> "ABA", 'B' -> "BBB"))
-    test(cantorDust)
+    //test(cantorDust)
 
-    val kochCurve = new Grammar("F",List('F' -> "F+F-F-F+F")) with DrawOption {
-      override val params: List[DrawParameter] = List('+' angle 90,'-' angle -90)
+    val kochCurve = new Grammar("F",List('F' -> "F+F-F-F+F")) with DrawParameter {
+      override val options: List[DrawOption] = List('+' angle 90,'-' angle -90, 'F' drawForward)
     }
-    test(kochCurve)
+    test(kochCurve)//0,0 =? 0 10
 
-    val sierpinskiTriangle = new Grammar("A",List('A' -> "B-A-B", 'B' -> "A+B+A")) with DrawOption {
-      override val params: List[DrawParameter] = List('+' angle 60,'-' angle -60)
+    val sierpinskiTriangle = new Grammar("A",List('A' -> "B-A-B", 'B' -> "A+B+A")) with DrawParameter {
+      override val options: List[DrawOption] = List('+' angle 60,'-' angle -60, 'A' drawForward, 'B' drawForward)
     }
-    test(sierpinskiTriangle)
+    //test(sierpinskiTriangle)//0,0 =? 90 5
 
-    //val dragonCurve = new Grammar("FX", List('X' -> "X+YF+",'Y' -> "-FX-Y"))
-//
-//
-//    initialize
-//    implicit val mat = createMat
-//
-//    draw {
-//      drawCircle(Point(320,240),100,red,-1)
-//      drawLine(Point(0,0),Point(200,200),green,5)
-//      drawRect(Point(220,10),Point(400,200),purple,5)
-//      drawArrowLine(Point(400,300),Point(600,50),yellow,3)
-//      drawPolyLines(List(Point(0,0),Point(200,100),Point(0,200),Point(200,300)),false,white,5)
-//      drawFillPoly(List(Point(500,500),Point(200,100),Point(500,200),Point(200,300)),aqua,5)
-//    }
+    val dragonCurve = new Grammar("FX", List('X' -> "X+YF+",'Y' -> "-FX-Y")) with DrawParameter {
+      override val options: List[DrawOption] = List('+' angle 90, '-' angle -90, 'F' drawForward)
+    }
+    //test(dragonCurve)
+
+    val fractalPlant = new Grammar("X",List('X' -> "F-[[X]+X]+F[+FX]-X",'F' -> "FF")) with DrawParameter {
+      override val options: List[DrawOption] = List('+' angle 25,'-' angle -25, '[' push,']' pop)
+    }
+   // test(fractalPlant)
+
   }
 
   override val title: String = "kamiya"
