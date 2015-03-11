@@ -17,7 +17,7 @@ object LSystemDrawer extends Drawing {
     //drawable,next
     def newPoint: (DrawStatus, DrawStatus) = {
       val rad = (angle / 360.0) * 2 * math.Pi
-      val nr = r / depth
+      val nr = r
       val nx = nr * math.cos(rad)
       val ny = nr * math.sin(rad)
       val np = Point(p.x + nx, p.y + ny)
@@ -44,7 +44,6 @@ object LSystemDrawer extends Drawing {
           parse(options, src tail, status newAngle deg)(stack)
       }
     }
-  //TODO:Optimize
   implicit class LSystemGrammarDrawer(val self:Grammar) {
     def drawStep(text: String)(implicit start: Point = Point.zero, angle: Double = 0, r: Double = 10, color: Color = Color.green, thickness: Int = 3) : Mat = {
       implicit val mat = createMat
