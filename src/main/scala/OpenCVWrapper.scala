@@ -68,6 +68,12 @@ object OpenCVWrapper {
       f
       win.showImage(mat)
     }
+    def show(implicit mat:Mat) : Unit = {
+      win.showImage(mat)
+    }
+    def drawHidden(f: => Unit)(implicit mat:Mat) : Unit = {
+      f
+    }
     def delay(ms:Long) = Thread.sleep(ms)
     def drawCircle(p:Point,r:Int,c:Color,thickness:Int)(implicit mat:Mat) = circle(mat,p,r,c,thickness,LINE_AA,0)
     def drawLine(p1:Point,p2:Point,c:Color,thickness:Int)(implicit mat:Mat) = line(mat,p1,p2,c,thickness,LINE_AA,0)

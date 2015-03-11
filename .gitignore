@@ -1,0 +1,5 @@
+*.png
+.idea/workspace.xml
+project/project/
+project/target/
+target/
